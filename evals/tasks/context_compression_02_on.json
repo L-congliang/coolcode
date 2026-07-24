@@ -1,0 +1,60 @@
+{
+  "category": "context-compression",
+  "suite": "context_compression",
+  "episode_id": "context_episode_02",
+  "fixture": "fixtures/specialized_context_02",
+  "prelude_prompts": [
+    "Read specs/context.txt completely. Identify the one ACTIVE RULE and retain its exact RULE_ID and formula. Do not edit files yet.",
+    "Read diagnostics.log and src/logic.py. Explain which active rule the implementation violates. Do not edit files yet."
+  ],
+  "prompt": "Now fix src/logic.py using the active rule you found earlier. Run python -m unittest discover -s tests and stop when it passes.",
+  "success": {
+    "commands": [
+      "python -m unittest discover -s tests"
+    ],
+    "file_contains": {
+      "src/logic.py": [
+        "RULE_ID = \"CTX_02\"",
+        "return value * 3 + 2"
+      ]
+    },
+    "expected_modified": [
+      "src/logic.py"
+    ],
+    "forbidden_modified": [
+      "tests/test_logic.py"
+    ]
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "src/logic.py",
+        "old": "RULE_ID = \"UNSET\"\n\ndef transform(value):\n    return value",
+        "new": "RULE_ID = \"CTX_02\"\n\ndef transform(value):\n    return value * 3 + 2"
+      }
+    ]
+  },
+  "metadata": {
+    "rule_id": "CTX_02"
+  },
+  "id": "context_compression_02_on",
+  "variant": "compression_on",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 18,
+    "max_cost_usd": 0.6,
+    "thinking": false,
+    "compression_mode": "on",
+    "effective_context_window": 7000,
+    "memory_enabled": false
+  },
+  "trace_expectations": {
+    "required_tools": [
+      "read_file",
+      "edit_file",
+      "run_shell"
+    ],
+    "min_compression_events": 1,
+    "max_tool_calls": 20
+  }
+}

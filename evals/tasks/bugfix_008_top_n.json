@@ -1,0 +1,32 @@
+{
+  "id": "bugfix_008_top_n",
+  "category": "bugfix",
+  "fixture": "fixtures/bugfix_008_top_n/repo",
+  "prompt": "Fix ranking.py so top_n returns the highest scores first. Run `python -m unittest -q` and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["ranking.py"],
+    "forbidden_modified": ["test_ranking.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "ranking.py",
+        "old": "def top_n(scores, n):\n    return sorted(scores, key=lambda item: item[\"score\"])[:n]\n",
+        "new": "def top_n(scores, n):\n    return sorted(scores, key=lambda item: item[\"score\"], reverse=True)[:n]\n"
+      }
+    ]
+  }
+}

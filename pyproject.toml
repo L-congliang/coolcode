@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coolcode-agent"
+version = "1.0.0"
+description = "A Python coding agent CLI with context compression, memory, permissions, and task-level evaluation"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = [
+    "anthropic>=0.40.0",
+    "openai>=1.50.0",
+    "rich>=13.0.0",
+]
+
+[project.scripts]
+coolcode = "coolcode.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["coolcode*"]
+
+[tool.setuptools.package-data]
+coolcode = ["assets/*.json"]

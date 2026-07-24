@@ -1,0 +1,32 @@
+{
+  "id": "context_003_csv_loader",
+  "category": "context",
+  "fixture": "fixtures/context_003_csv_loader/repo",
+  "prompt": "Fix loader.py so blank or whitespace-only lines are ignored before parsing. Inspect row_parser.py and tests, run `python -m unittest -q`, and do not modify row_parser.py or tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["loader.py"],
+    "forbidden_modified": ["row_parser.py", "test_loader.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 24,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "loader.py",
+        "old": "    for line in text.splitlines():\n        rows.append(parse_row(line))\n",
+        "new": "    for line in text.splitlines():\n        if not line.strip():\n            continue\n        rows.append(parse_row(line))\n"
+      }
+    ]
+  }
+}

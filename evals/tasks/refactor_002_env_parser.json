@@ -1,0 +1,35 @@
+{
+  "id": "refactor_002_env_parser",
+  "category": "refactor",
+  "fixture": "fixtures/refactor_002_env_parser/repo",
+  "prompt": "Refactor env_parser.py by introducing TRUE_VALUES and FALSE_VALUES constants, keeping behavior unchanged. Run `python -m unittest -q` and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "file_contains": {
+      "env_parser.py": ["TRUE_VALUES", "FALSE_VALUES"]
+    },
+    "expected_modified": ["env_parser.py"],
+    "forbidden_modified": ["test_env_parser.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "env_parser.py",
+        "old": "def parse_bool(value):\n    normalized = value.strip().lower()\n    if normalized == \"true\" or normalized == \"1\" or normalized == \"yes\" or normalized == \"on\":\n        return True\n    if normalized == \"false\" or normalized == \"0\" or normalized == \"no\" or normalized == \"off\":\n        return False\n    raise ValueError(f\"invalid boolean value: {value}\")\n",
+        "new": "TRUE_VALUES = {\"true\", \"1\", \"yes\", \"on\"}\nFALSE_VALUES = {\"false\", \"0\", \"no\", \"off\"}\n\n\ndef parse_bool(value):\n    normalized = value.strip().lower()\n    if normalized in TRUE_VALUES:\n        return True\n    if normalized in FALSE_VALUES:\n        return False\n    raise ValueError(f\"invalid boolean value: {value}\")\n"
+      }
+    ]
+  }
+}

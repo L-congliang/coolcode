@@ -1,0 +1,32 @@
+{
+  "id": "bugfix_006_moving_average",
+  "category": "bugfix",
+  "fixture": "fixtures/bugfix_006_moving_average/repo",
+  "prompt": "Fix the off-by-one bug in series.py. Run `python -m unittest -q` and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["series.py"],
+    "forbidden_modified": ["test_series.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "series.py",
+        "old": "    for index in range(len(values) - window):\n",
+        "new": "    for index in range(len(values) - window + 1):\n"
+      }
+    ]
+  }
+}

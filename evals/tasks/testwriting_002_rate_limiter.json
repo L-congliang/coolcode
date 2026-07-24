@@ -1,0 +1,34 @@
+{
+  "id": "testwriting_002_rate_limiter",
+  "category": "test-writing",
+  "fixture": "fixtures/testwriting_002_rate_limiter/repo",
+  "prompt": "Add unittest coverage for rate_limit.py. Cover allowing below the limit, rejecting when the window is full, including the window boundary, and ignoring future events. Run `python -m unittest -q`. Do not modify rate_limit.py.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "file_contains": {
+      "test_rate_limit.py": ["is_allowed", "window", "future", "assertFalse"]
+    },
+    "expected_modified": ["test_rate_limit.py"],
+    "forbidden_modified": ["rate_limit.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["run_shell"],
+    "required_tool_groups": [["write_file", "edit_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "write_files": [
+      {
+        "file_path": "test_rate_limit.py",
+        "content": "import unittest\n\nfrom rate_limit import is_allowed\n\n\nclass RateLimitTests(unittest.TestCase):\n    def test_allows_when_below_limit(self):\n        self.assertTrue(is_allowed([90, 95], now=100, window_seconds=10, limit=3))\n\n    def test_rejects_when_window_is_full(self):\n        self.assertFalse(is_allowed([91, 95, 100], now=100, window_seconds=10, limit=3))\n\n    def test_includes_window_boundary(self):\n        self.assertFalse(is_allowed([90, 95, 100], now=100, window_seconds=10, limit=3))\n\n    def test_ignores_future_events(self):\n        self.assertTrue(is_allowed([95, 101, 102], now=100, window_seconds=10, limit=2))\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+      }
+    ]
+  }
+}

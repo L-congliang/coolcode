@@ -1,0 +1,53 @@
+{
+  "id": "refactor_003_report_builder",
+  "category": "refactor",
+  "fixture": "fixtures/refactor_003_report_builder/repo",
+  "prompt": "Refactor report.py to avoid repeated string concatenation in the loop. Use a list plus `join`, keep the exact output unchanged, run `python -m unittest -q`, and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": [
+      "python -m unittest -q"
+    ],
+    "file_contains": {
+      "report.py": [
+        ".join"
+      ]
+    },
+    "expected_modified": [
+      "report.py"
+    ],
+    "forbidden_modified": [
+      "test_report.py"
+    ]
+  },
+  "trace_expectations": {
+    "required_tools": [
+      "read_file",
+      "run_shell"
+    ],
+    "required_tool_groups": [
+      [
+        "edit_file",
+        "write_file"
+      ]
+    ],
+    "forbidden_tools": [
+      "web_fetch"
+    ],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "report.py",
+        "old": "def build_summary(rows):\n    text = ''\n    for row in rows:\n        text += f\"{row['name']}: {row['score']}\" + chr(10)\n    return text\n",
+        "new": "def build_summary(rows):\n    lines = []\n    for row in rows:\n        lines.append(f\"{row['name']}: {row['score']}\" + chr(10))\n    return ''.join(lines)\n"
+      }
+    ]
+  }
+}

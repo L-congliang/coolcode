@@ -1,0 +1,70 @@
+{
+  "category": "memory-recall",
+  "suite": "memory",
+  "episode_id": "memory_episode_12",
+  "fixture": "fixtures/specialized_memory_12",
+  "prelude_prompts": [
+    "Before editing, retrieve any stored project memory relevant to memory episode 12. Then update src/feature_a.py so POLICY uses the active remembered policy code. Read the source file before editing."
+  ],
+  "prompt": "In a fresh agent context, retrieve the same stored project memory and update src/feature_b.py with the active remembered policy code. Read before editing.",
+  "reset_agent_between_prompts": true,
+  "success": {
+    "file_contains": {
+      "src/feature_a.py": [
+        "POLICY = \"POLICY_12_ACTIVE\""
+      ],
+      "src/feature_b.py": [
+        "POLICY = \"POLICY_12_ACTIVE\""
+      ]
+    },
+    "file_not_contains": {
+      "src/feature_a.py": [
+        "POLICY = \"UNSET\""
+      ],
+      "src/feature_b.py": [
+        "POLICY = \"UNSET\""
+      ]
+    },
+    "expected_modified": [
+      "src/feature_a.py",
+      "src/feature_b.py"
+    ]
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "src/feature_a.py",
+        "old": "POLICY = \"UNSET\"",
+        "new": "POLICY = \"POLICY_12_ACTIVE\""
+      },
+      {
+        "file_path": "src/feature_b.py",
+        "old": "POLICY = \"UNSET\"",
+        "new": "POLICY = \"POLICY_12_ACTIVE\""
+      }
+    ]
+  },
+  "metadata": {
+    "expected_policy": "POLICY_12_ACTIVE",
+    "has_conflict": true
+  },
+  "id": "memory_recall_12_off",
+  "variant": "memory_off",
+  "memory_entries": [],
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.35,
+    "thinking": false,
+    "memory_enabled": false,
+    "compression_mode": "off"
+  },
+  "trace_expectations": {
+    "required_tools": [
+      "read_file",
+      "edit_file"
+    ],
+    "min_memory_retrievals": 0,
+    "max_tool_calls": 14
+  }
+}

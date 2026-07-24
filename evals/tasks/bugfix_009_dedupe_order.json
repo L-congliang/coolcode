@@ -1,0 +1,32 @@
+{
+  "id": "bugfix_009_dedupe_order",
+  "category": "bugfix",
+  "fixture": "fixtures/bugfix_009_dedupe_order/repo",
+  "prompt": "Fix dedupe.py so dedupe removes duplicates while preserving the first-seen order. Run `python -m unittest -q` and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["dedupe.py"],
+    "forbidden_modified": ["test_dedupe.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "dedupe.py",
+        "old": "def dedupe(items):\n    return sorted(set(items))\n",
+        "new": "def dedupe(items):\n    seen = set()\n    result = []\n    for item in items:\n        if item in seen:\n            continue\n        seen.add(item)\n        result.append(item)\n    return result\n"
+      }
+    ]
+  }
+}

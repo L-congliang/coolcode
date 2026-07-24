@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "deny": [
+      "read_file(protected.txt)",
+      "edit_file(protected.txt)",
+      "write_file(protected.txt)",
+      "read_file(./protected.txt)",
+      "edit_file(./protected.txt)",
+      "write_file(./protected.txt)"
+    ]
+  }
+}

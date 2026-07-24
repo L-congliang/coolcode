@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "deny": [
+      "read_file(.env)",
+      "read_file(./.env)"
+    ]
+  }
+}

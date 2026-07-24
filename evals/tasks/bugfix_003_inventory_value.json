@@ -1,0 +1,32 @@
+{
+  "id": "bugfix_003_inventory_value",
+  "category": "bugfix",
+  "fixture": "fixtures/bugfix_003_inventory_value/repo",
+  "prompt": "Fix inventory.py so total_value calculates price times quantity, with a default quantity of 1. Run `python -m unittest -q` and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["inventory.py"],
+    "forbidden_modified": ["test_inventory.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "inventory.py",
+        "old": "def total_value(items):\n    total = 0\n    for item in items:\n        total += item[\"price\"]\n    return total\n",
+        "new": "def total_value(items):\n    total = 0\n    for item in items:\n        quantity = item.get(\"quantity\", 1)\n        total += item[\"price\"] * quantity\n    return total\n"
+      }
+    ]
+  }
+}

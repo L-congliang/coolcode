@@ -1,0 +1,32 @@
+{
+  "id": "context_001_user_display",
+  "category": "context",
+  "fixture": "fixtures/context_001_user_display/repo",
+  "prompt": "Fix the display name behavior in formatters.py. Inspect the related model and tests, return the user's full name when both names are present, fall back to email otherwise, run `python -m unittest -q`, and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["formatters.py"],
+    "forbidden_modified": ["models.py", "test_formatters.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 24,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "formatters.py",
+        "old": "def display_name(user):\n    return user.email\n",
+        "new": "def display_name(user):\n    first = user.first_name.strip()\n    last = user.last_name.strip()\n    if first and last:\n        return f\"{first} {last}\"\n    return user.email\n"
+      }
+    ]
+  }
+}

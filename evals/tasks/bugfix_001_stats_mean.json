@@ -1,0 +1,32 @@
+{
+  "id": "bugfix_001_stats_mean",
+  "category": "bugfix",
+  "fixture": "fixtures/bugfix_001_stats_mean/repo",
+  "prompt": "Fix the bug in stats.py. Run `python -m unittest -q` and leave all tests passing. Do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["stats.py"],
+    "forbidden_modified": ["test_stats.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "stats.py",
+        "old": "def mean(values):\n    total = 0\n    for value in values:\n        total += value\n    return total / (len(values) - 1)\n",
+        "new": "def mean(values):\n    if not values:\n        raise ValueError(\"mean requires at least one value\")\n    total = 0\n    for value in values:\n        total += value\n    return total / len(values)\n"
+      }
+    ]
+  }
+}

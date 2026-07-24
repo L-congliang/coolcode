@@ -1,0 +1,32 @@
+{
+  "id": "bugfix_004_range_edges",
+  "category": "bugfix",
+  "fixture": "fixtures/bugfix_004_range_edges/repo",
+  "prompt": "Fix ranges.py so contains_range treats range endpoints as inclusive. Run `python -m unittest -q` and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["ranges.py"],
+    "forbidden_modified": ["test_ranges.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "ranges.py",
+        "old": "def contains_range(value, ranges):\n    for start, end in ranges:\n        if start < value < end:\n            return True\n    return False\n",
+        "new": "def contains_range(value, ranges):\n    for start, end in ranges:\n        if start <= value <= end:\n            return True\n    return False\n"
+      }
+    ]
+  }
+}

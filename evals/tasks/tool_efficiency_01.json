@@ -1,0 +1,47 @@
+{
+  "id": "tool_efficiency_01",
+  "category": "tool-efficiency",
+  "suite": "tool_efficiency",
+  "variant": "candidate",
+  "fixture": "fixtures/specialized_tool_efficiency_01",
+  "prompt": "Fix src/calc.py so the tests pass. Inspect the implementation and tests, make the smallest correct edit, and run the test command.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.25,
+    "thinking": false
+  },
+  "success": {
+    "commands": [
+      "python -m unittest discover -s tests"
+    ],
+    "file_contains": {
+      "src/calc.py": [
+        "return value * 3"
+      ]
+    },
+    "expected_modified": [
+      "src/calc.py"
+    ],
+    "forbidden_modified": [
+      "tests/test_calc.py"
+    ]
+  },
+  "trace_expectations": {
+    "required_tools": [
+      "read_file",
+      "edit_file",
+      "run_shell"
+    ],
+    "max_tool_calls": 12
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "src/calc.py",
+        "old": "return value",
+        "new": "return value * 3"
+      }
+    ]
+  }
+}

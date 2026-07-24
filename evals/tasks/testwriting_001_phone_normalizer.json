@@ -1,0 +1,52 @@
+{
+  "id": "testwriting_001_phone_normalizer",
+  "category": "test-writing",
+  "fixture": "fixtures/testwriting_001_phone_normalizer/repo",
+  "prompt": "Add focused unittest coverage for phone.py. Cover formatting a normal US phone number, stripping a leading country code, and rejecting invalid input. Run `python -m unittest -q`. Do not modify phone.py.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": [
+      "python -m unittest -q"
+    ],
+    "file_contains": {
+      "test_phone.py": [
+        "normalize_phone",
+        "ValueError"
+      ]
+    },
+    "expected_modified": [
+      "test_phone.py"
+    ],
+    "forbidden_modified": [
+      "phone.py"
+    ]
+  },
+  "trace_expectations": {
+    "required_tools": [
+      "run_shell"
+    ],
+    "required_tool_groups": [
+      [
+        "write_file",
+        "edit_file"
+      ]
+    ],
+    "forbidden_tools": [
+      "web_fetch"
+    ],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "write_files": [
+      {
+        "file_path": "test_phone.py",
+        "content": "import unittest\n\nfrom phone import normalize_phone\n\n\nclass NormalizePhoneTests(unittest.TestCase):\n    def test_formats_ten_digit_number(self):\n        self.assertEqual(normalize_phone(\"5551234567\"), \"(555) 123-4567\")\n\n    def test_strips_leading_country_code(self):\n        self.assertEqual(normalize_phone(\"1-555-123-4567\"), \"(555) 123-4567\")\n        self.assertEqual(normalize_phone(\"15551234567\"), \"(555) 123-4567\")\n\n    def test_rejects_invalid_input(self):\n        with self.assertRaises(ValueError):\n            normalize_phone(\"12345\")\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "bugfix_002_slugify",
+  "category": "bugfix",
+  "fixture": "fixtures/bugfix_002_slugify/repo",
+  "prompt": "Fix the bug in text_utils.py so slug generation handles punctuation and repeated whitespace. Run `python -m unittest -q` and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["text_utils.py"],
+    "forbidden_modified": ["test_text_utils.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "text_utils.py",
+        "old": "def slugify(title):\n    cleaned = title.strip().lower().replace(\" \", \"-\")\n    return cleaned\n",
+        "new": "import re\n\n\ndef slugify(title):\n    cleaned = re.sub(r\"[^a-z0-9]+\", \"-\", title.strip().lower())\n    return cleaned.strip(\"-\")\n"
+      }
+    ]
+  }
+}

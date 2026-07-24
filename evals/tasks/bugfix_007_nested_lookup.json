@@ -1,0 +1,32 @@
+{
+  "id": "bugfix_007_nested_lookup",
+  "category": "bugfix",
+  "fixture": "fixtures/bugfix_007_nested_lookup/repo",
+  "prompt": "Fix lookup.py so get_path returns the default instead of raising when a nested key is missing or the path reaches a non-dict value. Run `python -m unittest -q` and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["lookup.py"],
+    "forbidden_modified": ["test_lookup.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "lookup.py",
+        "old": "def get_path(data, path, default=None):\n    current = data\n    for part in path.split(\".\"):\n        current = current[part]\n    return current\n",
+        "new": "def get_path(data, path, default=None):\n    current = data\n    for part in path.split(\".\"):\n        if not isinstance(current, dict) or part not in current:\n            return default\n        current = current[part]\n    return current\n"
+      }
+    ]
+  }
+}

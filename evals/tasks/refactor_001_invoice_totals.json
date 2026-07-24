@@ -1,0 +1,35 @@
+{
+  "id": "refactor_001_invoice_totals",
+  "category": "refactor",
+  "fixture": "fixtures/refactor_001_invoice_totals/repo",
+  "prompt": "Refactor invoice.py to remove the duplicated line-total calculation. Add a helper named `_line_total`, keep public behavior unchanged, run `python -m unittest -q`, and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "file_contains": {
+      "invoice.py": ["def _line_total"]
+    },
+    "expected_modified": ["invoice.py"],
+    "forbidden_modified": ["test_invoice.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "invoice.py",
+        "old": "def subtotal(items):\n    total = 0\n    for item in items:\n        total += item[\"quantity\"] * item[\"unit_price\"]\n    return total\n\n\ndef tax(items, rate):\n    total = 0\n    for item in items:\n        total += item[\"quantity\"] * item[\"unit_price\"]\n    return round(total * rate)\n\n\ndef grand_total(items, rate):\n    total = 0\n    for item in items:\n        total += item[\"quantity\"] * item[\"unit_price\"]\n    return total + round(total * rate)\n",
+        "new": "def _line_total(item):\n    return item[\"quantity\"] * item[\"unit_price\"]\n\n\ndef subtotal(items):\n    return sum(_line_total(item) for item in items)\n\n\ndef tax(items, rate):\n    return round(subtotal(items) * rate)\n\n\ndef grand_total(items, rate):\n    base = subtotal(items)\n    return base + round(base * rate)\n"
+      }
+    ]
+  }
+}

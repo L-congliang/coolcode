@@ -1,0 +1,83 @@
+{
+  "category": "memory-recall",
+  "suite": "memory",
+  "episode_id": "memory_episode_11",
+  "fixture": "fixtures/specialized_memory_11",
+  "prelude_prompts": [
+    "Before editing, retrieve any stored project memory relevant to memory episode 11. Then update src/feature_a.py so POLICY uses the active remembered policy code. Read the source file before editing."
+  ],
+  "prompt": "In a fresh agent context, retrieve the same stored project memory and update src/feature_b.py with the active remembered policy code. Read before editing.",
+  "reset_agent_between_prompts": true,
+  "success": {
+    "file_contains": {
+      "src/feature_a.py": [
+        "POLICY = \"POLICY_11_ACTIVE\""
+      ],
+      "src/feature_b.py": [
+        "POLICY = \"POLICY_11_ACTIVE\""
+      ]
+    },
+    "file_not_contains": {
+      "src/feature_a.py": [
+        "POLICY = \"UNSET\""
+      ],
+      "src/feature_b.py": [
+        "POLICY = \"UNSET\""
+      ]
+    },
+    "expected_modified": [
+      "src/feature_a.py",
+      "src/feature_b.py"
+    ]
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "src/feature_a.py",
+        "old": "POLICY = \"UNSET\"",
+        "new": "POLICY = \"POLICY_11_ACTIVE\""
+      },
+      {
+        "file_path": "src/feature_b.py",
+        "old": "POLICY = \"UNSET\"",
+        "new": "POLICY = \"POLICY_11_ACTIVE\""
+      }
+    ]
+  },
+  "metadata": {
+    "expected_policy": "POLICY_11_ACTIVE",
+    "has_conflict": true
+  },
+  "id": "memory_recall_11_on",
+  "variant": "memory_on",
+  "memory_entries": [
+    {
+      "name": "Superseded policy episode 11",
+      "description": "Old superseded policy for memory episode 11",
+      "type": "project",
+      "content": "This policy is obsolete: POLICY_11_OLD. Do not apply it when a current policy exists."
+    },
+    {
+      "name": "Active policy episode 11",
+      "description": "Current project policy for memory episode 11",
+      "type": "project",
+      "content": "The active project policy code is POLICY_11_ACTIVE. When asked to apply the remembered policy, set POLICY to this exact value."
+    }
+  ],
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.35,
+    "thinking": false,
+    "memory_enabled": true,
+    "compression_mode": "off"
+  },
+  "trace_expectations": {
+    "required_tools": [
+      "read_file",
+      "edit_file"
+    ],
+    "min_memory_retrievals": 1,
+    "max_tool_calls": 14
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "testwriting_003_pricing_rules",
+  "category": "test-writing",
+  "fixture": "fixtures/testwriting_003_pricing_rules/repo",
+  "prompt": "Add unittest coverage for pricing.py. Cover normal discounts, 100 percent discounts, rounding behavior, and invalid negative inputs. Run `python -m unittest -q`. Do not modify pricing.py.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "file_contains": {
+      "test_pricing.py": ["discounted_price", "100", "ValueError", "round"]
+    },
+    "expected_modified": ["test_pricing.py"],
+    "forbidden_modified": ["pricing.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["run_shell"],
+    "required_tool_groups": [["write_file", "edit_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "write_files": [
+      {
+        "file_path": "test_pricing.py",
+        "content": "import unittest\n\nfrom pricing import discounted_price\n\n\nclass DiscountedPriceTests(unittest.TestCase):\n    def test_applies_normal_discount(self):\n        self.assertEqual(discounted_price(1000, 25), 750)\n\n    def test_handles_full_discount(self):\n        self.assertEqual(discounted_price(999, 100), 0)\n\n    def test_uses_rounding(self):\n        self.assertEqual(discounted_price(999, 33), round(999 * 0.67))\n\n    def test_rejects_invalid_values(self):\n        with self.assertRaises(ValueError):\n            discounted_price(-1, 10)\n        with self.assertRaises(ValueError):\n            discounted_price(100, -5)\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+      }
+    ]
+  }
+}

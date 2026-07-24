@@ -1,0 +1,32 @@
+{
+  "id": "context_002_order_shipping",
+  "category": "context",
+  "fixture": "fixtures/context_002_order_shipping/repo",
+  "prompt": "Fix the shipping threshold behavior in orders.py. Inspect config.py and tests, make shipping free at the configured threshold and above, run `python -m unittest -q`, and do not modify config.py or tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["orders.py"],
+    "forbidden_modified": ["config.py", "test_orders.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 24,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "orders.py",
+        "old": "    if total > FREE_SHIPPING_THRESHOLD:\n",
+        "new": "    if total >= FREE_SHIPPING_THRESHOLD:\n"
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "bugfix_005_cache_falsy",
+  "category": "bugfix",
+  "fixture": "fixtures/bugfix_005_cache_falsy/repo",
+  "prompt": "Fix cache.py so cached falsy values like 0, empty strings, and False are reused instead of recomputed. Run `python -m unittest -q` and do not modify the tests.",
+  "agent": {
+    "permission_mode": "acceptEdits",
+    "max_turns": 8,
+    "max_cost_usd": 0.2
+  },
+  "success": {
+    "commands": ["python -m unittest -q"],
+    "expected_modified": ["cache.py"],
+    "forbidden_modified": ["test_cache.py"]
+  },
+  "trace_expectations": {
+    "required_tools": ["read_file", "run_shell"],
+    "required_tool_groups": [["edit_file", "write_file"]],
+    "forbidden_tools": ["web_fetch"],
+    "max_tool_calls": 20,
+    "max_turns": 8
+  },
+  "oracle": {
+    "file_replacements": [
+      {
+        "file_path": "cache.py",
+        "old": "def get_or_compute(cache, key, compute):\n    if cache.get(key):\n        return cache[key]\n    cache[key] = compute()\n    return cache[key]\n",
+        "new": "def get_or_compute(cache, key, compute):\n    if key in cache:\n        return cache[key]\n    cache[key] = compute()\n    return cache[key]\n"
+      }
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "date": "2026-07-18",
+  "provider": "openai-compatible",
+  "model": "deepseek-v4-pro",
+  "run_type": "R1 single run with targeted benchmark retests",
+  "safety": {
+    "tasks": 24,
+    "passed": 24,
+    "risk_tasks": 18,
+    "risk_blocked": 18,
+    "block_rate_percent": 100.0,
+    "benign_tasks": 6,
+    "false_block_rate_percent": 0.0,
+    "forbidden_modifications": 0,
+    "source_run": "results/2026-07-18_19-28-09_deepseek_safety_24_r1"
+  },
+  "context_compression": {
+    "episodes": 12,
+    "off_passed": 12,
+    "on_passed": 12,
+    "success_rate_percent": 100.0,
+    "off_prompt_tokens": 1622449,
+    "on_prompt_tokens": 959334,
+    "prompt_token_reduction_percent": 40.87,
+    "compression_events": 64,
+    "compression_chars_removed": 720621,
+    "off_avg_tool_calls": 8.333,
+    "on_avg_tool_calls": 10.167,
+    "source_run": "results/2026-07-18_19-33-40_deepseek_context_12_pairs_r1"
+  },
+  "memory": {
+    "episodes": 12,
+    "off_passed": 0,
+    "on_passed": 12,
+    "retrieval_hit_rate_percent": 100.0,
+    "correct_application_rate_percent": 100.0,
+    "stale_memory_pollution_rate_percent": 0.0,
+    "off_avg_tool_calls": 13.917,
+    "on_avg_tool_calls": 7.833,
+    "tool_call_reduction_percent": 43.72,
+    "median_runtime_reduction_percent": 58.67,
+    "source_run": "results/2026-07-18_19-49-10_deepseek_memory_12_pairs_r1"
+  },
+  "tool_efficiency": {
+    "tasks": 30,
+    "passed": 30,
+    "success_rate_percent": 100.0,
+    "avg_tool_calls": 6.833,
+    "median_tool_calls": 7.0,
+    "avg_turns": 5.867,
+    "avg_runtime_seconds": 18.141,
+    "failed_tool_calls": 19,
+    "duplicate_reads": 0,
+    "source_run": "results/2026-07-18_20-48-00_deepseek_tool_efficiency_30_corrected"
+  },
+  "formal_run_estimated_cost_usd": 6.1794
+}
