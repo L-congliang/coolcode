@@ -1,0 +1,39 @@
+services:
+  coolcode:
+    image: coolcode:1.0.1
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    working_dir: /workspace
+
+    env_file:
+      - .env
+
+    environment:
+      HTTP_PROXY: ""
+      HTTPS_PROXY: ""
+      ALL_PROXY: ""
+      WSS_PROXY: ""
+      http_proxy: ""
+      https_proxy: ""
+      all_proxy: ""
+      wss_proxy: ""
+
+    volumes:
+      - type: bind
+        source: "${COOLCODE_WORKSPACE}"
+        target: /workspace
+
+      - type: volume
+        source: coolcode-data
+        target: /home/coolcode/.coolcode
+
+    stdin_open: true
+    tty: true
+
+volumes:
+  coolcode-data:
+    external: true
+    name: coolcode-data

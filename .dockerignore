@@ -1,0 +1,35 @@
+# Git metadata
+.git
+.gitignore
+
+# Python environments and caches
+.venv
+venv
+__pycache__
+*.py[cod]
+*.egg-info
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Build and generated output
+build
+dist
+evals/results
+
+# Not required in the production image
+tests
+evals
+
+# Personal learning documents
+COOLCODE_INTERVIEW_LEARNING_PLAN.md
+INTERVIEW_NOTES.md
+LEARNING_PLAN.md
+LEARNING_SUMMARY.md
